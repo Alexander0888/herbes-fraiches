@@ -1,0 +1,67 @@
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { createSharedPlanStore } from '../src/data/sharedPlanStore.js';
+import { checked, localSettings, sessionlessClient } from './localSupabase.js';
+
+const { url, key } = localSettings(process.argv[2]);
+const accounts = JSON.parse(readFileSync('supabase/demo-accounts.local', 'utf8'));
+const anonymous = sessionlessClient(url, key);
+
+async function signIn(role) {
+  const { email, password } = accounts.find((account) => account.role === role);
+  const client = sessionlessClient(url, key);
+  const session = checked(await client.auth.signInWithPassword({ email, password }));
+  return { client, id: session.user.id };
+}
+
+const { client: manager } = await signIn('manager');
+const { client: employee, id: employeeId } = await signIn('employee');
+const managerStore = createSharedPlanStore(manager);
+const employeeStore = createSharedPlanStore(employee);
+const initial = await managerStore.load(true);
+assert.ok(initial.published, 'Publish a plan before running this check');
+assert.ok(initial.templates.length >= 1, 'Create a template before running this check');
+const model = initial.templates[0];
+
+const publicStore = createSharedPlanStore(anonymous);
+assert.deepEqual(await publicStore.load(false), { templates: [], published: initial.published });
+assert.ok((await anonymous.from('plan_templates').select('id')).error);
+assert.ok((await anonymous.from('rayon_members').select('role')).error);
+assert.ok((await anonymous.from('published_plan').update({ name: initial.published.name }).eq('id', 1)).error);
+assert.ok((await anonymous.rpc('apply_plan', {
+  source_id: model.id, source_revision: model.revision, snapshot_name: model.name, snapshot_slots: model.slots,
+})).error);
+assert.deepEqual(checked(await employee.from('plan_templates').select('id')), []);
+assert.equal(checked(await employee.from('rayon_members').select('role').eq('user_id', employeeId).single()).role, 'employee');
+assert.ok((await employee.from('rayon_members').update({ role: 'manager' }).eq('user_id', employeeId)).error);
+assert.ok((await employee.from('plan_templates').insert({
+  id: randomUUID(), name: model.name, slots: model.slots,
+})).error);
+assert.deepEqual(checked(await employee.from('plan_templates').update({ name: model.name }).eq('id', model.id)
+  .select('id')), []);
+assert.deepEqual(checked(await employee.from('plan_templates').delete().eq('id', model.id).select('id')), []);
+assert.ok((await employee.from('published_plan').update({ name: initial.published.name }).eq('id', 1)).error);
+assert.ok((await employee.rpc('apply_plan', {
+  source_id: model.id, source_revision: model.revision, snapshot_name: model.name, snapshot_slots: model.slots,
+})).error);
+assert.deepEqual(await employeeStore.load(false), { templates: [], published: initial.published });
+
+assert.ok((await manager.from('published_plan').update({ applied_at: '2020-01-01Z' }).eq('id', 1)).error);
+let testModel;
+try {
+  await assert.rejects(managerStore.saveTemplate({
+    ...model, id: randomUUID(), slots: model.slots.slice(1), revision: undefined,
+  }));
+  testModel = await managerStore.saveTemplate({ ...model, id: randomUUID(), name: 'Vérification locale', revision: undefined });
+  const old = testModel;
+  testModel = await managerStore.saveTemplate({ ...old, name: 'Vérification locale mise à jour' });
+  assert.equal(testModel.revision, old.revision + 1);
+  await assert.rejects(managerStore.saveTemplate(old), { code: 'PT409' });
+  await assert.rejects(managerStore.deleteTemplate(old), { code: 'PT409' });
+  await assert.rejects(managerStore.applyTemplate(old), { code: 'PT409' });
+  assert.deepEqual(await employeeStore.loadPublished(), initial.published);
+} finally {
+  if (testModel) await managerStore.deleteTemplate(testModel);
+}
+console.log('Local Auth, row permissions, validation and revision checks passed.');
