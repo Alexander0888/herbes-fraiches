@@ -1,4 +1,4 @@
-import { fr } from '../content/fr.js';
+import { fr } from '../../../content/fr.js';
 import { herbStyle, herbs } from '../data/herbs.js';
 import { countSlots, SLOT_COUNT } from '../data/plans.js';
 

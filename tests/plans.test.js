@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPlanStore } from '../src/data/planStore.js';
-import { copyTemplate, countSlots, emptySlots, sameTemplate, validSlots } from '../src/data/plans.js';
+import { createPlanStore } from '../src/features/herbs/data/planStore.js';
+import { copyTemplate, countSlots, emptySlots, sameTemplate, validSlots } from '../src/features/herbs/data/plans.js';
 
 function memoryStorage() {
   const entries = new Map();

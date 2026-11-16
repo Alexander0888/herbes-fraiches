@@ -1,4 +1,4 @@
-import { fr } from '../content/fr.js';
+import { fr } from '../../../content/fr.js';
 import { herbById, herbs } from './herbs.js';
 
 export const COLUMNS = 6;

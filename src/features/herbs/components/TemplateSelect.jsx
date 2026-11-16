@@ -1,5 +1,5 @@
-import { fr } from '../content/fr.js';
-import { ChoiceSelect } from './ChoiceSelect.jsx';
+import { fr } from '../../../content/fr.js';
+import { ChoiceSelect } from '../../../components/ChoiceSelect.jsx';
 
 export function TemplateSelect({ templates, draft, onSelect }) {
   return (

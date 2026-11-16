@@ -11,6 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --test",
+    "test:ui": "playwright test",
+    "test:ui:shared": "HERBES_E2E_SHARED=1 playwright test",
     "db:start": "SUPABASE_TELEMETRY_DISABLED=1 supabase start --eager -x storage,functions,studio,mail,analytics,pooler",
     "db:stop": "SUPABASE_TELEMETRY_DISABLED=1 supabase stop",
     "db:demo": "node scripts/setup-local.js",
@@ -22,9 +24,11 @@
     "@supabase/supabase-js": "^2.119.0",
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-router": "^7.18.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@vitejs/plugin-react": "^6.0.0",
     "supabase": "^3.1.0",
     "vite": "^8.0.0"

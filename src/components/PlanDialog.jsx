@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { fr } from '../content/fr.js';
-import { MAX_NAME_LENGTH } from '../data/plans.js';
 
-export function PlanDialog({ title, descriptions, initialName, action, danger, onClose, onConfirm }) {
+export function PlanDialog({ title, descriptions, initialName, action, danger, maxNameLength, onClose, onConfirm }) {
   const dialog = useRef(null);
   const input = useRef(null);
   const [name, setName] = useState(initialName ?? '');
@@ -25,7 +24,7 @@ export function PlanDialog({ title, descriptions, initialName, action, danger, o
       input.current.reportValidity();
       return;
     }
-    onConfirm(name.trim());
+    if (action) onConfirm(name.trim());
   }
 
   return (
@@ -42,7 +41,7 @@ export function PlanDialog({ title, descriptions, initialName, action, danger, o
         {asksName && (
           <div className="dialog-field">
             <label htmlFor="model-name">{fr.name}</label>
-            <input ref={input} type="text" id="model-name" required value={name} maxLength={MAX_NAME_LENGTH}
+            <input ref={input} type="text" id="model-name" required value={name} maxLength={maxNameLength}
               placeholder={fr.namePlaceholder}
               onChange={(event) => {
                 event.target.setCustomValidity('');
@@ -52,7 +51,7 @@ export function PlanDialog({ title, descriptions, initialName, action, danger, o
         )}
         <div className="dialog-actions">
           <button className="button" type="button" onClick={onClose}>{fr.cancel}</button>
-          <button className={danger ? 'button danger' : 'button primary'} type="submit">{action}</button>
+          {action && <button className={danger ? 'button danger' : 'button primary'} type="submit">{action}</button>}
         </div>
       </form>
     </dialog>

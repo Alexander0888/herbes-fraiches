@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react';
-import { fr, locale } from '../content/fr.js';
+import { fr, locale } from '../../../content/fr.js';
 import { herbById, herbStyle } from '../data/herbs.js';
 import { COLUMNS, ROWS } from '../data/plans.js';
 

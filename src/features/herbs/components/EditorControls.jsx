@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Check, ChevronDown, Copy, Eraser, Pencil, Plus, RotateCcw, Trash2 } from 'lucide-react';
-import { fr } from '../content/fr.js';
+import { fr } from '../../../content/fr.js';
 import { herbStyle, herbs } from '../data/herbs.js';
-import { ChoiceSelect } from './ChoiceSelect.jsx';
+import { ChoiceSelect } from '../../../components/ChoiceSelect.jsx';
 import { TemplateSelect } from './TemplateSelect.jsx';
 
 export function TemplateBar({ templates, draft, dirty, onSelect, onAction }) {

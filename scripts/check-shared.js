@@ -1,10 +1,19 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { createSharedPlanStore } from '../src/data/sharedPlanStore.js';
+import { parseEnv } from 'node:util';
+import { createSharedPlanStore } from '../src/features/herbs/data/sharedPlanStore.js';
 import { checked, localSettings, sessionlessClient } from './localSupabase.js';
 
-const { url, key } = localSettings(process.argv[2]);
+// Use the same local endpoint as the browser even after switching Git branches.
+// A named stack can still be selected explicitly via the existing CLI argument.
+const settings = process.argv[2] ? null : parseEnv(readFileSync('.env.shared.local', 'utf8'));
+const { url, key } = settings
+  ? { url: settings.VITE_SUPABASE_URL, key: settings.VITE_SUPABASE_PUBLISHABLE_KEY }
+  : localSettings(process.argv[2]);
+if (!key || !['127.0.0.1', 'localhost', '[::1]'].includes(new URL(url).hostname)) {
+  throw new Error('Permission checks may use only a local Supabase instance.');
+}
 const accounts = JSON.parse(readFileSync('supabase/demo-accounts.local', 'utf8'));
 const anonymous = sessionlessClient(url, key);
 

@@ -6,5 +6,7 @@ dist/
 *.pem
 *.key
 .DS_Store
+test-results/
+playwright-report/
 
 !.env.example

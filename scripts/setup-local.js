@@ -1,7 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { initialPlans } from '../src/data/plans.js';
-import { createSharedPlanStore } from '../src/data/sharedPlanStore.js';
+import { initialPlans } from '../src/features/herbs/data/plans.js';
+import { createSharedPlanStore } from '../src/features/herbs/data/sharedPlanStore.js';
 import { checked, localSettings, sessionlessClient } from './localSupabase.js';
 
 const { url, key, secretKey } = localSettings(process.argv[2]);
