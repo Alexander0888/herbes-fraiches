@@ -9,4 +9,9 @@ dist/
 test-results/
 playwright-report/
 
+# Local project documentation
+/AGENTS.md
+/README.md
+/ROADMAP.md
+
 !.env.example
