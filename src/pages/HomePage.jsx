@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router';
 import { ArrowRight, ChartNoAxesColumn, ClipboardList, Leaf, Map, ScanLine, Tag } from 'lucide-react';
 import { AppHeader } from '../app/AppHeader.jsx';
-import { fr } from '../content/fr.js';
+import { fr, pageTitle } from '../content/fr.js';
 
 const sections = [
   { id: 'herbs', Icon: Leaf, to: '/herbs' },
@@ -15,7 +15,7 @@ const sections = [
 
 export default function HomePage() {
   const account = useOutletContext();
-  useEffect(() => { document.title = `${fr.home} · ${fr.appName}`; }, []);
+  useEffect(() => { document.title = pageTitle(); }, []);
 
   return (
     <>

@@ -7,7 +7,7 @@ import { AppHeader } from '../../app/AppHeader.jsx';
 import { Link, useBlocker, useOutletContext } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { Stand } from './components/Stand.jsx';
-import { fr } from '../../content/fr.js';
+import { fr, pageTitle } from '../../content/fr.js';
 import { copyTemplate, emptySlots, MAX_NAME_LENGTH, sameTemplate } from './data/plans.js';
 import { localWorkspace } from './data/localWorkspace.js';
 import { createSharedPlanStore } from './data/sharedPlanStore.js';
@@ -45,7 +45,7 @@ function Workspace({ repository, canEdit, startEditing, signIn, signOut, signOut
     (dirty || pending) && currentLocation.pathname !== nextLocation.pathname);
 
   useEffect(() => {
-    document.title = `${editing ? fr.editTitle : fr.brand} · ${fr.appName}`;
+    document.title = pageTitle(editing ? fr.editTitle : fr.brand);
   }, [editing]);
 
   // Finish a requested navigation only after a successful save. A failed save
@@ -320,7 +320,15 @@ function Workspace({ repository, canEdit, startEditing, signIn, signOut, signOut
         )}
         {!editing && plans && (plans.published ? (
           <div className="workspace">
-            <Stand {...plans.published} />
+            <div className="stand-column">
+              <Stand {...plans.published} />
+              <section className="card restock-guide" aria-labelledby="restock-title">
+                <h2 id="restock-title">{fr.restockTitle}</h2>
+                <ol>
+                  {fr.restockSteps.map((step) => <li key={step}>{step}</li>)}
+                </ol>
+              </section>
+            </div>
             <Legend slots={plans.published.slots} />
           </div>
         ) : (

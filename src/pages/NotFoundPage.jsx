@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router';
 import { AppHeader } from '../app/AppHeader.jsx';
-import { fr } from '../content/fr.js';
+import { AppFooter } from '../app/AppFooter.jsx';
+import { fr, pageTitle } from '../content/fr.js';
 
 export function NotFoundPage() {
   const account = useOutletContext();
-  useEffect(() => { document.title = `${fr.notFoundTitle} · ${fr.appName}`; }, []);
+  useEffect(() => { document.title = pageTitle(fr.notFoundTitle); }, []);
   return (
     <>
       <AppHeader {...account} />
@@ -21,6 +22,8 @@ export function NotFoundPage() {
 }
 
 export function RouteErrorPage() {
+  useEffect(() => { document.title = pageTitle(fr.pageErrorTitle); }, []);
+
   return (
     <>
       <AppHeader />
@@ -31,6 +34,7 @@ export function RouteErrorPage() {
           <button className="button recovery-link" onClick={() => window.location.reload()}>{fr.retry}</button>
         </section>
       </main>
+      <AppFooter />
     </>
   );
 }

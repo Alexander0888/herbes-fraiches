@@ -1,8 +1,15 @@
 export const locale = 'fr-FR';
 
+const appName = 'Rayon 74';
+const appDepartment = 'Fruits et légumes';
+const department = `${appName} · ${appDepartment}`;
+
+export const pageTitle = (page) => `Manor | ${page ? `${page} · ${appName}` : department}`;
+
 export const fr = {
-  appName: 'Rayon 74',
-  appDepartment: 'Fruits et légumes',
+  appName,
+  appDepartment,
+  slogan: 'Créé par nous, pour un avenir meilleur, ensemble.',
   home: 'Accueil',
   backHome: 'Retour à l’accueil',
   navigation: 'Navigation',
@@ -27,7 +34,7 @@ export const fr = {
   navigationPendingTitle: 'Opération en cours',
   navigationPendingDescription: 'Patientez jusqu’à la fin de l’opération avant de quitter cette page.',
   brand: 'Herbes fraîches',
-  department: 'Rayon 74 · Fruits et légumes',
+  department,
   modes: 'Mode de consultation',
   view: 'Consultation',
   viewShort: 'Plan',
@@ -36,6 +43,12 @@ export const fr = {
   editTitle: 'Éditeur de modèles',
   stand: 'Présentoir',
   front: 'Côté client',
+  restockTitle: 'Mise en rayon',
+  restockSteps: [
+    'Vérifiez les dates limites de consommation et l’aspect de toutes les herbes.',
+    'Replacez d’abord les herbes déjà en rayon qui peuvent encore être vendues. Suivez le plan en vigueur : des clients ont pu les déplacer.',
+    'Ajoutez ensuite les nouvelles herbes et placez le surplus au réfrigérateur.',
+  ],
   dimensions: (columns, rows) => `${columns} colonnes sur ${rows} rangées`,
   position: (column, row, name) => `${column}${row} · ${name}`,
   current: 'Plan en vigueur',

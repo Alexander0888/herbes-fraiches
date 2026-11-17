@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
+import { AppFooter } from './app/AppFooter.jsx';
 import { AccessScreen, SharedAccess } from './services/SharedAccess.jsx';
 import { incompleteSupabaseConfig, supabase } from './services/supabase.js';
 import { fr } from './content/fr.js';
@@ -13,7 +14,12 @@ export default function App() {
   }, [pathname]);
 
   if (incompleteSupabaseConfig) {
-    return <AccessScreen><p role="alert">{fr.incompleteConfig}</p></AccessScreen>;
+    return (
+      <>
+        <AccessScreen><p role="alert">{fr.incompleteConfig}</p></AccessScreen>
+        <AppFooter />
+      </>
+    );
   }
 
   return (
@@ -27,6 +33,7 @@ export default function App() {
           {(account) => <Outlet context={account} />}
         </SharedAccess>
       ) : <Outlet context={{ workspaceKey: 'local', canEdit: true }} />}
+      <AppFooter />
     </>
   );
 }

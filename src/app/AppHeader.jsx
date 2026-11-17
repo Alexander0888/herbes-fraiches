@@ -1,14 +1,15 @@
 import { Leaf, LogIn, LogOut } from 'lucide-react';
+import { Link } from 'react-router';
 import { fr } from '../content/fr.js';
 
 export function AppHeader({ children, signIn, signOut, pending = false }) {
   return (
     <header className="site-header">
       <div className="page-width header-inner">
-        <div className="brand">
+        <Link className="brand" to="/" aria-label={`${fr.department} · ${fr.home}`}>
           <span className="brand-icon" aria-hidden="true"><Leaf size={18} strokeWidth={1.5} /></span>
-          <div><strong>{fr.appName}</strong><span>{fr.appDepartment}</span></div>
-        </div>
+          <span className="brand-label"><strong>{fr.appName}</strong><span>{fr.appDepartment}</span></span>
+        </Link>
         <div className="header-actions">
           {children}
           {signIn && (
